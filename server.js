@@ -8,7 +8,7 @@ const superagent = require('superagent');
 
 // TODO: Add application setup
 const app = express();
-const PORT = process.env.PORT // CHANGE-TODO: May need to set port by default. 
+const PORT = process.env.PORT
 
 // TODO: Set up database
 const client = new pg.Client(process.env.DATABASE_URL);
@@ -27,7 +27,25 @@ app.use(express.urlencoded({ extended: true })); // REVIEW-TODO: Check to make s
 //     .catch(console.error);
 // })
 
-app.get('/', (req, res) => res.send('Something in there. Doesn\'t matter what. -Luther'));
+app.get('/', (req, res) => res.send('Something in there. Doesn\'t matter what. -Luther is the bomb'));
+
+app.post('/api/v1/thats-so-cravin', (req, res) => {
+  console.log(req.body);
+  let SQL = `
+  INSERT INTO users(first_name, last_name, username, password)
+  VALUES ($1, $2, $3, $4);
+	`;
+  let values = [
+    req.body.first_name,
+    req.body.last_name,
+    req.body.username,
+    req.body.password
+  ];
+  client.query(SQL, values)
+    .then(results => res.send(`insert complete`))
+    .catch(console.error)
+  ;
+});
 
 // TODO: Set up 404
 // app.get('*', (req, res) => res.status(404).send('This route does not exist!'));

@@ -32,38 +32,40 @@ app.get('/', (req, res) => res.send('Something in there. Doesn\'t matter what. -
 app.post('/api/v1/thats-so-cravin', (req, res) => {
   console.log(req.body);
   let SQL = `
-  INSERT INTO users(first_name, last_name, username, password)
+  INSERT INTO users(username, password, allowed_allergy, allowed_diet)
   VALUES ($1, $2, $3, $4);
 	`;
   let values = [
-    req.body.first_name,
-    req.body.last_name,
     req.body.username,
-    req.body.password
+    req.body.password,
+    req.body.allowed_allergy,
+    req.body.allowed_diet
   ];
   client.query(SQL, values)
-    .then(results => res.send(`insert complete`))
-    .catch(console.error)
-  ;
+    .then(results => res.send(results.rows, `insert complete`))
+    .catch(console.error);
 });
 
-// CHANGE-TODO: Get rid of this line once everything is working.
-// app.get('/', (req, res) => res.send('Something in there. Doesn\'t matter what. -Luther'));
 
 // This get request is to add user preferences to the search function.
-
 // TODO: Communicate with DB to retrieve user preferences(allowed_allergy, allowed_diet)
 app.get('/api/v1/users', (req, res) => {
   console.log(`This is for the allergies query`);
   let SQL = `SELECT allowed_allergy, allowed_diet
     FROM users
-    WHERE user_id = 1;`;
-    // TODO: The 1 needs to be a variable
-    
-  client.query(SQL)
+    WHERE user_id = $1
+    VALUES($1);`;
+
+  let values = req.body.user_id;
+
+  // client.query(SQL, values).then => res.send(`Dietary preferences retrieved.`)
+
+  // TODO: The 1 needs to be a variable
+
+  client.query(SQL, values)
     .then(results => res.send(results.rows))
     .catch(console.error);
-})
+});
 
 // TODO: Set up 404
 // app.get('*', (req, res) => res.status(404).send('This route does not exist!'));

@@ -11,7 +11,7 @@ const app = express();
 const PORT = process.env.PORT
 
 // TODO: Set up database
-const client = new pg.Client(process.env.DATAbASE_URL);
+const client = new pg.Client(process.env.DATABASE_URL);
 client.connect();
 client.on('error', err => console.log(err));
 

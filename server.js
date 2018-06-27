@@ -8,7 +8,7 @@ const superagent = require('superagent');
 
 // TODO: Add application setup
 const app = express();
-const PORT = process.env.PORT // CHANGE-TODO: May need to set port by default. 
+const PORT = process.env.PORT // CHANGE-TODO: May need to set port by default.
 
 // TODO: Set up database
 const client = new pg.Client(process.env.DATAbASE_URL);
@@ -32,13 +32,15 @@ app.use(express.urlencoded({ extended: true })); // REVIEW-TODO: Check to make s
 
 // This get request is to add user preferences to the search function.
 
+// TODO: Communicate with DB to retrieve user preferences(allowed_allergy, allowed_diet)
 app.get('/api/v1/users', (req, res) => {
-    console.log(`This is for the allergies query`);
-    let SQL = `SELECT allowed_allergy, allowed_diet
+  console.log(`This is for the allergies query`);
+  let SQL = `SELECT allowed_allergy, allowed_diet
     FROM users
     WHERE user_id = 1;`;
-    // TODO: The 1 needs to be a variable 
-client.query(SQL)
+    // TODO: The 1 needs to be a variable
+    
+  client.query(SQL)
     .then(results => res.send(results.rows))
     .catch(console.error);
 })

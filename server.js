@@ -48,21 +48,13 @@ app.post('/api/v1/thats-so-cravin', (req, res) => {
 
 
 // This get request is to add user preferences to the search function.
-// TODO: Communicate with DB to retrieve user preferences(allowed_allergy, allowed_diet)
+// CHANGE-TODO: Communicate with DB to retrieve user preferences(allowed_allergy, allowed_diet)
 app.get('/api/v1/users', (req, res) => {
-  console.log(`This is for the allergies query`);
-  let SQL = `SELECT allowed_allergy, allowed_diet
-    FROM users
-    WHERE user_id = $1
-    VALUES($1);`;
+  console.log(`This is for the allergies query ${req.params.username}`);
+  let SQL = `SELECT * FROM users
+    WHERE username = ${req.params.username};`;
 
-  let values = req.body.user_id;
-
-  // client.query(SQL, values).then => res.send(`Dietary preferences retrieved.`)
-
-  // TODO: The 1 needs to be a variable
-
-  client.query(SQL, values)
+  client.query(SQL)
     .then(results => res.send(results.rows))
     .catch(console.error);
 });
